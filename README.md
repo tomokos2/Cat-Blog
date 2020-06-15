@@ -3,9 +3,9 @@ A blog site purely to discuss and share all things cat-related, created with Fla
 
 Ideal capabilities:
 - Account creation/validation
- - Username
- - Email
- - Profile picture
+  - Username
+  - Email
+  - Profile picture
 - Creating/deleting/editing posts
 - Timeline
 - Picture uploading capabilities
