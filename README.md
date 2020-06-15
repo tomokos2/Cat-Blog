@@ -1,5 +1,5 @@
-# Cat-Blog
-A blog site purely to discuss and share all things cat-related, created with Flask framework and designed with Bootstrap.
+# Food-Blog
+A blog site purely to discuss and share all things food-related, created with Flask framework and designed with Bootstrap.
 
 Ideal capabilities:
 - Account creation/validation
@@ -9,5 +9,6 @@ Ideal capabilities:
 - Creating/deleting/editing posts
 - Timeline
 - Picture uploading capabilities
+- Recipe uploading?
 - Aesthetics
 - Home page
