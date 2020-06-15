@@ -6,6 +6,7 @@ Ideal capabilities:
   - Username
   - Email
   - Profile picture
+- Graph Activity?  
 - Creating/deleting/editing posts
 - Timeline
 - Picture uploading capabilities
