@@ -1,9 +1,20 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 # Create the flask app
 app = Flask(__name__)
 
-# Set up the database
+app.config.from_pyfile('config.py')
 
-# Set up database classes
+# Load views after the app is instantiated
+from app_files.views import *
+
+# Set up the database
+db = SQLAlchemy(app)
+
+
+if __name__ == '__main__':
+    app.run()
+
+
 
