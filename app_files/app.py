@@ -12,9 +12,5 @@ from app_files.views import *
 # Set up the database
 db = SQLAlchemy(app)
 
-
 if __name__ == '__main__':
     app.run()
-
-
-
