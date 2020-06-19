@@ -34,11 +34,6 @@ class User(UserMixin, db.Model):
         return f'<User: id={self.id}, name={self.username}>'
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)

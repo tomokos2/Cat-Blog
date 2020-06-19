@@ -8,8 +8,12 @@ app = Flask(__name__)
 
 app.config.from_pyfile('config.py')
 
+# Set up bootstrap
+Bootstrap(app)
+
 # Load views after the app is instantiated
 from app_files.views import *
+
 
 # Set up the database
 db = SQLAlchemy(app)
@@ -18,8 +22,10 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# Set up bootstrap
-Bootstrap(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 if __name__ == '__main__':
