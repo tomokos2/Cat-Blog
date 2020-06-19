@@ -1,12 +1,11 @@
 from flask import render_template, request
-from app_files.app import app, db
+from app_files import app, db
 from app_files.models import Post, User
 from sqlalchemy import desc
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
-from wtforms.validators import InputRequired, Email, Length
-
+from wtforms.validators import InputRequired, Length
 
 
 @app.route('/')

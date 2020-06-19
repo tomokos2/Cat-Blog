@@ -1,4 +1,4 @@
-from app_files.app import db, login_manager
+from app_files import db
 from datetime import datetime
 from flask_login import UserMixin
 
