@@ -3,6 +3,10 @@ from app_files.app import app, db
 from app_files.models import Post, User
 from sqlalchemy import desc
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField
+from wtforms.validators import InputRequired, Email, Length
+
 
 
 @app.route('/')
@@ -11,9 +15,15 @@ def index():
     return render_template('index.html')
 
 
+class LoginForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(min=4, max=20)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=20)])
+    shouldRemember = BooleanField('remember me')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
+    form = LoginForm()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -29,7 +39,7 @@ def login():
 
         return render_template('home.html')
     else:
-        return render_template('login.html')
+        return render_template('login.html', form=form)
 
 
 @app.route('/logout')
