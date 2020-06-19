@@ -1,5 +1,6 @@
-from app_files.app import db
+from app_files.app import db, login_manager
 from datetime import datetime
+from flask_login import UserMixin
 
 
 class Post(db.Model):
@@ -17,7 +18,7 @@ class Post(db.Model):
         return f'<Post: id={self.id}, author={self.author}>'
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
@@ -31,6 +32,11 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User: id={self.id}, name={self.username}>'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 class Comment(db.Model):

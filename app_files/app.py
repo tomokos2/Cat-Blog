@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
 # Create the flask app
@@ -11,6 +12,11 @@ from app_files.views import *
 
 # Set up the database
 db = SQLAlchemy(app)
+
+# Set up login manager
+login_manager = LoginManager()
+login_manager.init_app(app)
+
 
 if __name__ == '__main__':
     app.run()
