@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, redirect
 from app_files import app, db
 from app_files.models import Post, User
 from sqlalchemy import desc
@@ -36,7 +36,7 @@ def login():
         #     db.session.add(user)
         #     db.session.commit()
 
-        return render_template('home.html')
+        return redirect('/home')
     else:
         return render_template('login.html', form=form)
 

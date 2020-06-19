@@ -3,10 +3,11 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1>This is your home page</h1>
-<hr>
+<div class="container">
+    <h1>This is your home page</h1>
+    <hr>
 
-{% for post in posts %}
+    {% for post in posts %}
     <div>
         <h2>{{post.title}}</h2>
         <div>{{post.date}}</div>
@@ -14,6 +15,8 @@
         <p>{{post.content}}</p>
     </div>
     <hr>
-{% endfor %}
+    {% endfor %}
+</div>
+
 
 {% endblock %}
