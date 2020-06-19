@@ -1,11 +1,8 @@
 from flask import render_template, request, redirect
 from app_files import app, db
-from app_files.models import Post, User
+from app_files.models import Post, User, LoginForm, RegisterForm
 from sqlalchemy import desc
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField
-from wtforms.validators import InputRequired, Length
 
 
 @app.route('/')
@@ -14,31 +11,49 @@ def index():
     return render_template('index.html')
 
 
-class LoginForm(FlaskForm):
-    username = StringField('username', validators=[InputRequired(), Length(min=4, max=20)])
-    password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=20)])
-    shouldRemember = BooleanField('remember me')
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+    error = None
+
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+
         user = User.query.filter_by(username=username).first()
-        login_user(user)
 
-        # if user:
-        #     current_user_id = user.id
-        # else:
-        #     user = User(username=username, email="default@gmail.com", password=password)
-        #     db.session.add(user)
-        #     db.session.commit()
+        if user and user.password == password:
+            login_user(user)
+            return redirect('/home')
+        else:
+            error = 'Invalid credentials'
 
-        return redirect('/home')
-    else:
-        return render_template('login.html', form=form)
+    return render_template('login.html', form=form, error=error)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    error = None
+    form = RegisterForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        email = form.email.data
+        username_exists = User.query.filter_by(username=username).first()
+        email_exists = User.query.filter_by(email=email).first()
+
+        if username_exists or email_exists:
+            error = "There is already a user registered with that username or email in the system."
+        elif form.password.data != form.passwordRetype.data:
+            error = "The two passwords you have entered do not match."
+        else:
+            new_user = User(username=username, email=email, password=form.password.data)
+            db.session.add(new_user)
+            db.session.commit()
+            message = "You have successfully created an account. Please log in!"
+
+            return render_template('login.html', form=LoginForm(), message=message)
+
+    return render_template('register.html', form=form, error=error)
 
 
 @app.route('/logout')
