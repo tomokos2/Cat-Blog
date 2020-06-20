@@ -82,4 +82,5 @@ def create():
 @login_required
 def home():
     all_posts = Post.query.order_by(desc(Post.date)).all()
-    return render_template('home.html', posts=all_posts)
+    user = User.query.get(current_user.id)
+    return render_template('home.html', posts=all_posts, current_user=user)
