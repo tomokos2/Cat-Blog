@@ -1,21 +1,95 @@
-{% extends 'base.html' %}
+{% extends 'bootstrap/base.html' %}
+{% block title %}Home{% endblock %}
 
-{% block head %}
-<title>Home</title>
-{% endblock %}
-
-{% block body %}
-<h1>This is your home page</h1>
+{% block content %}
+<div class="row">
+    <h1 class="col-xs-8">This is your home page</h1>
+    <div class="col-xs-4" >
+        <div class="row profile">
+            <div class="col-md-3">
+                <div class="profile-sidebar">
+                    <!-- SIDEBAR USERPIC -->
+                    <div class="profile-userpic">
+                        <img src="{{ url_for('static', filename='suzuchan.jpg') }}"
+                             class="img-responsive" alt="propic">
+                    </div>
+                    <!-- END SIDEBAR USERPIC -->
+                    <!-- SIDEBAR USER TITLE -->
+                    <div class="profile-usertitle">
+                        <div class="profile-usertitle-name">
+                            Marcus Doe
+                        </div>
+                        <div class="profile-usertitle-job">
+                            Developer
+                        </div>
+                    </div>
+                    <!-- END SIDEBAR USER TITLE -->
+                    <!-- SIDEBAR BUTTONS -->
+                    <div class="profile-userbuttons">
+                        <a type="button" href="/create" class="btn btn-info">Create New Post</a>
+                        <button type="button" class="btn btn-danger btn-sm">Message</button>
+                    </div>
+                    <!-- END SIDEBAR BUTTONS -->
+                    <!-- SIDEBAR MENU -->
+                    <div class="profile-usermenu">
+                        <ul class="nav">
+                            <li class="active">
+                                <a href="#">
+                                    <i class="glyphicon glyphicon-home"></i>
+                                    Overview </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="glyphicon glyphicon-user"></i>
+                                    Account Settings </a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank">
+                                    <i class="glyphicon glyphicon-ok"></i>
+                                    Tasks </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="glyphicon glyphicon-flag"></i>
+                                    Help </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- END MENU -->
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="profile-content">
+                    Some user related content goes here...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <hr>
+<div class="container">
 
-{% for post in posts %}
+
+    {% for post in posts %}
     <div>
-        <h2>post.title</h2>
-        <div>post.date</div>
+        <h2>{{post.title}}</h2>
+        <div>Written by: {{ current_user.username }}</div>
+        <div>{{post.date}}</div>
         <br>
-        <p>post.content</p>
+        <p>{{post.content}}</p>
+        <br>
+        {% if current_user.id|int() == post.user_id|int() %}
+            <a href="#">Edit</a>
+            <a href="#">Delete</a>
+        {% endif %}
+        <a href="#">Comment</a>
+
     </div>
     <hr>
-{% endfor %}
+    {% endfor %}
+
+</div>
+
+
 
 {% endblock %}

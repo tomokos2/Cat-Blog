@@ -1,10 +1,9 @@
-from flask import render_template, request
-from app_files.app import app, db
-from app_files.models import Post, User
+from flask import render_template, request, redirect
+from app_files import app, db
+from app_files.models import Post, User, LoginForm, RegisterForm
 from sqlalchemy import desc
+from flask_login import login_user, logout_user, login_required, current_user
 
-
-current_user_id = None
 
 @app.route('/')
 def index():
@@ -14,38 +13,74 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    global current_user_id
+    form = LoginForm()
+    error = None
 
-    if request.method == 'POST':
-        username = request.form['user']
-        password = request.form['password']
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+
         user = User.query.filter_by(username=username).first()
 
-        if user:
-            current_user_id = user.id
+        if user and user.password == password:
+            login_user(user)
+            return redirect('/home')
         else:
-            user = User(username=username, email="default@gmail.com", password=password)
-            db.session.add(user)
-            db.commit()
-    else:
-        return render_template('login.html')
+            error = 'Invalid credentials'
+
+    return render_template('login.html', form=form, error=error)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    error = None
+    form = RegisterForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        email = form.email.data
+        username_exists = User.query.filter_by(username=username).first()
+        email_exists = User.query.filter_by(email=email).first()
+
+        if username_exists or email_exists:
+            error = "There is already a user registered with that username or email in the system."
+        elif form.password.data != form.passwordRetype.data:
+            error = "The two passwords you have entered do not match."
+        else:
+            new_user = User(username=username, email=email, password=form.password.data)
+            db.session.add(new_user)
+            db.session.commit()
+            message = "You have successfully created an account. Please log in!"
+
+            return render_template('login.html', form=LoginForm(), message=message)
+
+    return render_template('register.html', form=form, error=error)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return 'You are now logged out!'
 
 
 @app.route('/create', methods=['GET', 'POST'])
+@login_required
 def create():
-    if request.method == 'POST' and current_user_id:
+    if request.method == 'POST':
         post_title = request.form['title']
         post_content = request.form['content']
-        post_author = current_user_id
+        post_author = current_user.id
 
         new_post = Post(title=post_title, content=post_content, user_id=post_author)
         db.session.add(new_post)
-        db.commit()
+        db.session.commit()
 
     return render_template('create.html')
 
 
 @app.route('/home')
+@login_required
 def home():
-    all_posts = Post.query.order_by(desc(Post.date_posted)).all()
-    return render_template('home.html', posts=all_posts)
+    all_posts = Post.query.order_by(desc(Post.date)).all()
+    user = User.query.get(current_user.id)
+    return render_template('home.html', posts=all_posts, current_user=user)

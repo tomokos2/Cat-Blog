@@ -1,11 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'bootstrap/base.html' %}
 
-{% block head %}
-<title>Welcome</title>
-{% endblock %}
+{% block title %}Welcome{% endblock %}
 
-{% block body %}
-<h1>Welcome to the food blog!</h1>
-<a class="btn btn-primary" href="/login">Login</a>
-<a class="btn btn-default" href="#">Sign Up</a>
+{% block content %}
+<div class="Container">
+    <h1>Welcome to the food blog!</h1>
+    <a class="btn btn-primary" href="/login">Login</a>
+    <a class="btn btn-default" href="/register">Sign Up</a>
+</div>
 {% endblock %}

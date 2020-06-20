@@ -1,5 +1,9 @@
-from app_files.app import db
+from app_files import db
 from datetime import datetime
+from flask_login import UserMixin
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField
+from wtforms.validators import InputRequired, Length, Email
 
 
 class Post(db.Model):
@@ -14,10 +18,10 @@ class Post(db.Model):
     comments = db.relationship('Comment', backref='post_src', lazy=True)
 
     def __repr__(self):
-        return f'<Post: id={self.id}, author={self.author}>'
+        return f'<Post: id={self.id}, title={self.title} author={self.author}>'
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
@@ -43,5 +47,17 @@ class Comment(db.Model):
     # The post under which the comment was written
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
 
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[InputRequired(), Length(min=4, max=20)])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=4, max=20)])
+    shouldRemember = BooleanField('Remember Me')
+
+
+class RegisterForm(FlaskForm):
+    email = StringField('Email', validators=[InputRequired(), Email(message='Invalid Email'), Length(min=4, max=50)])
+    username = StringField('Username', validators=[InputRequired(), Length(min=4, max=20)])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=4, max=20)])
+    passwordRetype = PasswordField('Retype Your Password', validators=[InputRequired(), Length(min=4, max=20)])
 
 
