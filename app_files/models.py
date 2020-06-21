@@ -13,7 +13,7 @@ class Post(db.Model):
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     # user.id is lowercase because referencing the table name, which is user by default
-    user_id = db.Column(db.String(100), db.ForeignKey('user.id'), nullable=False)
+    author = db.Column(db.String(100), db.ForeignKey('user.username'), nullable=False)
 
     comments = db.relationship('Comment', backref='post_src', lazy=True)
 
@@ -31,7 +31,7 @@ class User(UserMixin, db.Model):
 
     # Relationship to post model
     # lazy means sqlalchemy will load all of the data in one go
-    posts = db.relationship('Post', backref='author', lazy=True)
+    posts = db.relationship('Post', backref='post_author', lazy=True)
 
     def __repr__(self):
         return f'<User: id={self.id}, name={self.username}>'
