@@ -68,6 +68,6 @@ class RegisterForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=1, max=40)])
     image = FileField('Image', validators=[FileAllowed(['jpg', 'png'], 'Images only!')])
-    content = TextAreaField('Content', validators=[Length(min=1, max=2000)])
+    content = TextAreaField('Content', validators=[InputRequired(), Length(min=1, max=2000)])
 
 
