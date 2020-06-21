@@ -36,11 +36,11 @@
                 </div>
             </li>
         </ul>
-        <a class="btn btn-success" href="/home/create">+Create Post</a>
+        {% block nav_create_btn %}{% endblock %}
     </div>
 </nav>
 
-<div class="container">
+<div class="container" style="height:100%;">
     {% block main_page %}{% endblock %}
 </div>
 
