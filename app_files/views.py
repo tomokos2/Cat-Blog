@@ -7,6 +7,7 @@ from sqlalchemy import desc
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 
+
 @app.route('/')
 def index():
     # Finds a file called index.html inside the templates directory
@@ -77,7 +78,8 @@ def create():
             post_content = form.content.data
             user = User.query.get(current_user.id)
             photo = form.image.data
-            filename = None
+
+            image_path = None
             if photo:
                 filename = secure_filename(photo.filename)
                 filepath = os.path.join(ROOT_DIR, 'static', 'uploads', 'photos', filename)
@@ -97,6 +99,8 @@ def create():
 # @login_required
 # def edit(id):
 #     post = Post.query.get_or_404(id)
+#     if post.author != User.query.get(current_user.()).username:
+#         return
 #     if request.method == 'POST':
 #         title =
 

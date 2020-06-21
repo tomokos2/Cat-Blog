@@ -1,85 +1,96 @@
-{% extends 'bootstrap/base.html' %}
+{% extends 'base_home.html' %}
 
 {% block title %}Home{% endblock %}
 
-{% block content %}
-<div class="row">
-    <h1 class="col-xs-8">This is your home page</h1>
-    <div class="col-xs-4" >
-        <div class="row profile">
-            <div class="col-md-3">
-                <div class="profile-sidebar">
-                    <!-- SIDEBAR USERPIC -->
-                    <div class="profile-userpic">
-                        <img src="{{ url_for('static', filename='suzuchan.jpg') }}"
-                             class="img-responsive" alt="propic">
-                    </div>
-                    <!-- END SIDEBAR USERPIC -->
-                    <!-- SIDEBAR USER TITLE -->
-                    <div class="profile-usertitle">
-                        <div class="profile-usertitle-name">
-                            Marcus Doe
-                        </div>
-                        <div class="profile-usertitle-job">
-                            Developer
-                        </div>
-                    </div>
-                    <!-- END SIDEBAR USER TITLE -->
-                    <!-- SIDEBAR BUTTONS -->
-                    <div class="profile-userbuttons">
-                        <a type="button" href="/home/create" class="btn btn-info">Create New Post</a>
-                        <a type="button" href="/logout" class="btn btn-danger btn-sm">Sign out</a>
-                    </div>
-                    <!-- END SIDEBAR BUTTONS -->
-                    <!-- SIDEBAR MENU -->
-                    <div class="profile-usermenu">
-                        <ul class="nav">
-                            <li class="active">
-                                <a href="#">
-                                    <i class="glyphicon glyphicon-home"></i>
-                                    Overview </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="glyphicon glyphicon-user"></i>
-                                    Account Settings </a>
-                            </li>
-                            <li>
-                                <a href="#" target="_blank">
-                                    <i class="glyphicon glyphicon-ok"></i>
-                                    Tasks </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="glyphicon glyphicon-flag"></i>
-                                    Help </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- END MENU -->
-                </div>
-            </div>
-            <div class="col-md-9">
-                <div class="profile-content">
-                    Some user related content goes here...
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% block main_page %}
+<!--<div class="row">-->
+<!--    <h1 class="col-xs-8">This is your home page</h1>-->
+<!--    <div class="col-xs-4" >-->
+<!--        <div class="row profile">-->
+<!--            <div class="col-md-3">-->
+<!--                <div class="profile-sidebar">-->
+<!--                    &lt;!&ndash; SIDEBAR USERPIC &ndash;&gt;-->
+<!--                    <div class="profile-userpic">-->
+<!--                        <img src="{{ url_for('static', filename='suzuchan.jpg') }}"-->
+<!--                             class="img-responsive" alt="propic">-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; END SIDEBAR USERPIC &ndash;&gt;-->
+<!--                    &lt;!&ndash; SIDEBAR USER TITLE &ndash;&gt;-->
+<!--                    <div class="profile-usertitle">-->
+<!--                        <div class="profile-usertitle-name">-->
+<!--                            Marcus Doe-->
+<!--                        </div>-->
+<!--                        <div class="profile-usertitle-job">-->
+<!--                            Developer-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; END SIDEBAR USER TITLE &ndash;&gt;-->
+<!--                    &lt;!&ndash; SIDEBAR BUTTONS &ndash;&gt;-->
+<!--                    <div class="profile-userbuttons">-->
+<!--                        <a type="button" href="/home/create" class="btn btn-info">Create New Post</a>-->
+<!--                        <a type="button" href="/logout" class="btn btn-danger btn-sm">Sign out</a>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; END SIDEBAR BUTTONS &ndash;&gt;-->
+<!--                    &lt;!&ndash; SIDEBAR MENU &ndash;&gt;-->
+<!--                    <div class="profile-usermenu">-->
+<!--                        <ul class="nav">-->
+<!--                            <li class="active">-->
+<!--                                <a href="#">-->
+<!--                                    <i class="glyphicon glyphicon-home"></i>-->
+<!--                                    Overview </a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a href="#">-->
+<!--                                    <i class="glyphicon glyphicon-user"></i>-->
+<!--                                    Account Settings </a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a href="#" target="_blank">-->
+<!--                                    <i class="glyphicon glyphicon-ok"></i>-->
+<!--                                    Tasks </a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a href="#">-->
+<!--                                    <i class="glyphicon glyphicon-flag"></i>-->
+<!--                                    Help </a>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; END MENU &ndash;&gt;-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-9">-->
+<!--                <div class="profile-content">-->
+<!--                    Some user related content goes here...-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 <hr>
 
 <div class="container">
 
 
     {% for post in posts %}
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{{url_for('static', filename=post.image_path)}}" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">{{post.title}}</h5>
+            <p class="card-text">{{post.content}}</p>
+            <a href="#" class="btn btn-primary">See More</a>
+        </div>
+    </div>
     <div>
+
         <h2>{{post.title}}</h2>
         <div>Written by: {{ post.author }}</div>
         <div>{{post.date}}</div>
         <br>
         {% if post.image_path %}
-        <img src="{{url_for('static', filename=post.image_path)}}">
+        <div style="width:400px; height:400px; border:5px solid black;">
+            <img style="max-width:100%; max-height:100%;" src="{{url_for('static', filename=post.image_path)}}">
+        </div>
         {% endif %}
         <p style="white-space:pre-wrap">{{post.content}}</p>
         <br>
