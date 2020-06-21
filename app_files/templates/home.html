@@ -1,4 +1,4 @@
-{% extends 'bootstrap/base.html' %}
+{% extends 'base.html' %}
 {% block title %}Home{% endblock %}
 
 {% block content %}
@@ -27,7 +27,7 @@
                     <!-- SIDEBAR BUTTONS -->
                     <div class="profile-userbuttons">
                         <a type="button" href="/create" class="btn btn-info">Create New Post</a>
-                        <button type="button" class="btn btn-danger btn-sm">Message</button>
+                        <a type="button" href="/logout" class="btn btn-danger btn-sm">Sign out</a>
                     </div>
                     <!-- END SIDEBAR BUTTONS -->
                     <!-- SIDEBAR MENU -->
@@ -73,12 +73,12 @@
     {% for post in posts %}
     <div>
         <h2>{{post.title}}</h2>
-        <div>Written by: {{ current_user.username }}</div>
+        <div>Written by: {{ post.author }}</div>
         <div>{{post.date}}</div>
         <br>
-        <p>{{post.content}}</p>
+        <p style="white-space:pre-wrap">{{post.content}}</p>
         <br>
-        {% if current_user.id|int() == post.user_id|int() %}
+        {% if current_user == post.author %}
             <a href="#">Edit</a>
             <a href="#">Delete</a>
         {% endif %}

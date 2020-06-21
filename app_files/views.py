@@ -60,7 +60,7 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return 'You are now logged out!'
+    return render_template('logout.html')
 
 
 @app.route('/create', methods=['GET', 'POST'])
@@ -69,11 +69,13 @@ def create():
     if request.method == 'POST':
         post_title = request.form['title']
         post_content = request.form['content']
-        post_author = current_user.id
+        user = User.query.get(current_user.id)
 
-        new_post = Post(title=post_title, content=post_content, user_id=post_author)
+        new_post = Post(title=post_title, content=post_content, author=user.username)
         db.session.add(new_post)
         db.session.commit()
+
+        return redirect('/home')
 
     return render_template('create.html')
 
@@ -82,5 +84,5 @@ def create():
 @login_required
 def home():
     all_posts = Post.query.order_by(desc(Post.date)).all()
-    user = User.query.get(current_user.id)
-    return render_template('home.html', posts=all_posts, current_user=user)
+    username = User.query.get(current_user.id).username
+    return render_template('home.html', posts=all_posts, current_user=username)
