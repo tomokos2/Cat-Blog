@@ -1,4 +1,5 @@
-{% extends 'base.html' %}
+{% extends 'bootstrap/base.html' %}
+
 {% block title %}Home{% endblock %}
 
 {% block content %}
@@ -26,7 +27,7 @@
                     <!-- END SIDEBAR USER TITLE -->
                     <!-- SIDEBAR BUTTONS -->
                     <div class="profile-userbuttons">
-                        <a type="button" href="/create" class="btn btn-info">Create New Post</a>
+                        <a type="button" href="/home/create" class="btn btn-info">Create New Post</a>
                         <a type="button" href="/logout" class="btn btn-danger btn-sm">Sign out</a>
                     </div>
                     <!-- END SIDEBAR BUTTONS -->
@@ -67,6 +68,7 @@
     </div>
 </div>
 <hr>
+
 <div class="container">
 
 
@@ -76,6 +78,9 @@
         <div>Written by: {{ post.author }}</div>
         <div>{{post.date}}</div>
         <br>
+        {% if post.image_path %}
+        <img src="{{url_for('static', filename=post.image_path)}}">
+        {% endif %}
         <p style="white-space:pre-wrap">{{post.content}}</p>
         <br>
         {% if current_user == post.author %}

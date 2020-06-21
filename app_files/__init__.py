@@ -18,6 +18,8 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+# Set up image loader
+
 from app_files.models import User
 
 
