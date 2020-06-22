@@ -1,8 +1,11 @@
+import os
+
 from flask import render_template, request, redirect
 from app_files import app, db
-from app_files.models import Post, User, LoginForm, RegisterForm
+from app_files.models import Post, User, LoginForm, RegisterForm, PostForm
 from sqlalchemy import desc
 from flask_login import login_user, logout_user, login_required, current_user
+from werkzeug.utils import secure_filename
 
 
 @app.route('/')
@@ -60,24 +63,53 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return render_template('logout.html')
+    return render_template('index.html')
 
 
-@app.route('/create', methods=['GET', 'POST'])
+@app.route('/home/create', methods=['GET', 'POST'])
 @login_required
 def create():
+    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    form = PostForm()
     if request.method == 'POST':
-        post_title = request.form['title']
-        post_content = request.form['content']
-        user = User.query.get(current_user.id)
 
-        new_post = Post(title=post_title, content=post_content, author=user.username)
-        db.session.add(new_post)
-        db.session.commit()
+        if form.validate_on_submit():
+            post_title = form.title.data
+            post_content = form.content.data
+            user = User.query.get(current_user.id)
+            photo = form.image.data
+
+            image_path = None
+            if photo:
+                filename = secure_filename(photo.filename)
+                filepath = os.path.join(ROOT_DIR, 'static', 'uploads', 'photos', filename)
+                photo.save(filepath)
+                image_path = "/uploads/photos/" + filename
+
+            new_post = Post(title=post_title, content=post_content, author=user.username, image_path=image_path)
+            db.session.add(new_post)
+            db.session.commit()
 
         return redirect('/home')
 
-    return render_template('create.html')
+    return render_template('create.html', form=form)
+
+
+@app.route('/home/self')
+@login_required
+def user_home():
+    posts = User.query.get(current_user.id).posts
+    return render_template('user_posts.html', posts=posts)
+
+
+# @app.route('/home/edit/<int:id>', methods=['GET', 'POST'])
+# @login_required
+# def edit(id):
+#     post = Post.query.get_or_404(id)
+#     if post.author != User.query.get(current_user.()).username:
+#         return
+#     if request.method == 'POST':
+#         title =
 
 
 @app.route('/home')
