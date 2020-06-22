@@ -63,7 +63,7 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return render_template('logout.html')
+    return render_template('index.html')
 
 
 @app.route('/home/create', methods=['GET', 'POST'])
@@ -93,6 +93,13 @@ def create():
         return redirect('/home')
 
     return render_template('create.html', form=form)
+
+
+@app.route('/home/self')
+@login_required
+def user_home():
+    posts = User.query.get(current_user.id).posts
+    return render_template('user_posts.html', posts=posts)
 
 
 # @app.route('/home/edit/<int:id>', methods=['GET', 'POST'])
