@@ -99,6 +99,8 @@ def create():
 @login_required
 def user_home():
     posts = User.query.get(current_user.id).posts
+
+
     return render_template('user_posts.html', posts=posts)
 
 
