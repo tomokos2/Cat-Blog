@@ -22,10 +22,6 @@
         <br>
         <p style="white-space:pre-wrap">{{post.content}}</p>
         <br>
-        {% if current_user == post.author %}
-        <a href="/home/edit/{{post.id}}">Edit</a>
-        <a href="#">Delete</a>
-        {% endif %}
         <a href="/home/comment/{{post.id}}">Comment</a>
     </div>
     <div style="width:10px;"></div>
@@ -41,7 +37,7 @@
 <div>
     {% for comment in post.comments %}
         <hr>
-        <h4>By: {{comment.user_id}} on {{comment.date}}</h4>
+        <h4>By: {{comment.author}} on {{comment.date}}</h4>
         <p>{{comment.content}}</p>
         <hr>
     {% endfor %}

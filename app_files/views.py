@@ -99,18 +99,28 @@ def create():
 @login_required
 def user_home():
     posts = User.query.get(current_user.id).posts
-    username = User.query.get(current_user.id).username
-    return render_template('user_posts.html', posts=posts, current_user=username)
+    return render_template('user_posts.html', posts=posts)
 
 
-# @app.route('/home/edit/<int:id>', methods=['GET', 'POST'])
+# @app.route('/home/self/edit/<int:id>', methods=['GET', 'POST'])
 # @login_required
 # def edit(id):
 #     post = Post.query.get_or_404(id)
-#     if post.author != User.query.get(current_user.()).username:
-#         return
+#     if post.author != User.query.get(current_user.id).username:
+#         return render_template('403.html'), 403
 #     if request.method == 'POST':
-#         title =
+
+
+@app.route('/home/self/delete/<int:id>')
+@login_required
+def delete(id):
+    post = Post.query.get_or_404(id)
+    if post.author != User.query.get(current_user.id).username:
+        return render_template('403.html'), 403
+
+    db.session.remove(post)
+    db.session.commit()
+    return redirect('/home/self')
 
 
 @app.route('/home/comment/<int:id>', methods=['GET', 'POST'])
@@ -118,17 +128,16 @@ def user_home():
 def comment(id):
     post = Post.query.get_or_404(id)
     form = CommentForm()
+    username = User.query.get(current_user.id).username
     if request.method == 'POST':
         if form.validate_on_submit():
             content = form.content.data
-            user_id = current_user.id
-            new_comment = Comment(content=content, user_id=user_id, post_id=id)
+            new_comment = Comment(content=content, author=username, post_id=id)
             db.session.add(new_comment)
             db.session.commit()
             return redirect('/home')
 
     all_posts = Post.query.order_by(desc(Post.date)).all()
-    username = User.query.get(current_user.id).username
     return render_template("comment.html", posts=all_posts, current_user=username, comment_post=id, form=form)
 
 @app.route('/home')

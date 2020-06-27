@@ -44,7 +44,7 @@ class Comment(db.Model):
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     # The author of the comment
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    author = db.Column(db.String(100), db.ForeignKey('user.username'), nullable=False)
     # The post under which the comment was written
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
 

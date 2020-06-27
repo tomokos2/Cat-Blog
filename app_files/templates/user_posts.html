@@ -1,5 +1,50 @@
-{% extends 'home.html' %}
+{% extends 'base_home.html' %}
 
+{% block title %}Home{% endblock %}
+
+{% block nav_create_btn %}
+<a class="btn btn-success" href="/home/create">+ Create Post</a>
+{% endblock %}
+
+{% block main_page %}
+<br><br>
 {% block page_title %}
-<h2 class="text-center">Your Posts</h2>
+<h2 class="text-center">Home Page</h2>
+{% endblock %}
+<br><br>
+{% for post in posts %}
+<div class="d-flex row">
+    <br>
+    <div style="width:300px;">
+        <h2>{{post.title}}</h2>
+        <div>Written by: {{ post.author }}</div>
+        <div>{{post.date}}</div>
+        <br>
+        <p style="white-space:pre-wrap">{{post.content}}</p>
+        <br>
+        <a href="/home/self/edit/{{post.id}}">Edit</a>
+        <a href="/home/self/delete/{{post.id}}">Delete</a>
+    </div>
+    <div style="width:10px;"></div>
+    <div>
+        {% if post.image_path %}
+        <div style="width:400px; height:400px; border:5px solid black;">
+            <img style="max-width:100%; max-height:100%;" src="{{url_for('static', filename=post.image_path)}}">
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div>
+    {% for comment in post.comments %}
+    <hr>
+    <h4>By: {{comment.author}} on {{comment.date}}</h4>
+    <p>{{comment.content}}</p>
+    <hr>
+    {% endfor %}
+</div>
+
+<br>
+<hr><br>
+{% endfor %}
 {% endblock %}
