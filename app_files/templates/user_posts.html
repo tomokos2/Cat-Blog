@@ -1,4 +1,5 @@
 {% extends 'base_home.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}Home{% endblock %}
 
@@ -16,6 +17,18 @@
 <div class="d-flex row">
     <br>
     <div style="width:300px;">
+        {% if editing and post.id == post_id %}
+        <form action="/home/self/edit/{{post.id}}" method="POST">
+            {{ form.hidden_tag() }}
+            {{ wtf.form_field(form.title) }}
+            <div>Written by: {{ post.author }}</div>
+            <div>{{post.date}}</div>
+            <br>
+            {{ wtf.form_field(form.content) }}
+            <button type="submit" class="btn btn-primary">Save Edit</button>
+        </form>
+        <a class="btn btn-danger" href="/home/self">Cancel</a>
+        {% else %}
         <h2>{{post.title}}</h2>
         <div>Written by: {{ post.author }}</div>
         <div>{{post.date}}</div>
@@ -24,6 +37,7 @@
         <br>
         <a href="/home/self/edit/{{post.id}}">Edit</a>
         <a href="/home/self/delete/{{post.id}}">Delete</a>
+        {% endif %}
     </div>
     <div style="width:10px;"></div>
     <div>
