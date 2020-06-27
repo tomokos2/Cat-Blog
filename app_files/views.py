@@ -2,7 +2,7 @@ import os
 
 from flask import render_template, request, redirect
 from app_files import app, db
-from app_files.models import Post, User, LoginForm, RegisterForm, PostForm
+from app_files.models import Post, User, Comment, LoginForm, RegisterForm, PostForm, CommentForm
 from sqlalchemy import desc
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
@@ -99,9 +99,8 @@ def create():
 @login_required
 def user_home():
     posts = User.query.get(current_user.id).posts
-
-
-    return render_template('user_posts.html', posts=posts)
+    username = User.query.get(current_user.id).username
+    return render_template('user_posts.html', posts=posts, current_user=username)
 
 
 # @app.route('/home/edit/<int:id>', methods=['GET', 'POST'])
@@ -113,6 +112,24 @@ def user_home():
 #     if request.method == 'POST':
 #         title =
 
+
+@app.route('/home/comment/<int:id>', methods=['GET', 'POST'])
+@login_required
+def comment(id):
+    post = Post.query.get_or_404(id)
+    form = CommentForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            content = form.content.data
+            user_id = current_user.id
+            new_comment = Comment(content=content, user_id=user_id, post_id=id)
+            db.session.add(new_comment)
+            db.session.commit()
+            return redirect('/home')
+
+    all_posts = Post.query.order_by(desc(Post.date)).all()
+    username = User.query.get(current_user.id).username
+    return render_template("comment.html", posts=all_posts, current_user=username, comment_post=id, form=form)
 
 @app.route('/home')
 @login_required
