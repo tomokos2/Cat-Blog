@@ -2,7 +2,7 @@ import os
 
 from flask import render_template, request, redirect
 from app_files import app, db
-from app_files.models import Post, User, Comment, LoginForm, RegisterForm, PostForm, CommentForm
+from app_files.models import Post, User, Comment, LoginForm, RegisterForm, PostForm, CommentForm, EditForm
 from sqlalchemy import desc
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
@@ -99,18 +99,42 @@ def create():
 @login_required
 def user_home():
     posts = User.query.get(current_user.id).posts
-    username = User.query.get(current_user.id).username
-    return render_template('user_posts.html', posts=posts, current_user=username)
+    return render_template('user_posts.html', posts=posts)
 
 
-# @app.route('/home/edit/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def edit(id):
-#     post = Post.query.get_or_404(id)
-#     if post.author != User.query.get(current_user.()).username:
-#         return
-#     if request.method == 'POST':
-#         title =
+@app.route('/home/self/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    post = Post.query.get_or_404(id)
+    posts = User.query.get(current_user.id).posts
+    form = EditForm()
+
+    if post.author != User.query.get(current_user.id).username:
+        return render_template('403.html'), 403
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            post.title = form.title.data
+            post.content = form.content.data
+            db.session.commit()
+            return redirect("/home/self")
+
+    form.content.data = post.content
+    form.title.data = post.title
+    return render_template('user_posts.html', post_id=post.id, form=form, editing=True, posts=posts)
+
+
+
+@app.route('/home/self/delete/<int:id>')
+@login_required
+def delete(id):
+    post = Post.query.get_or_404(id)
+
+    if post.author != User.query.get(current_user.id).username:
+        return render_template('403.html'), 403
+
+    db.session.delete(post)
+    db.session.commit()
+    return redirect('/home/self')
 
 
 @app.route('/home/comment/<int:id>', methods=['GET', 'POST'])
@@ -118,18 +142,18 @@ def user_home():
 def comment(id):
     post = Post.query.get_or_404(id)
     form = CommentForm()
+    username = User.query.get(current_user.id).username
     if request.method == 'POST':
         if form.validate_on_submit():
             content = form.content.data
-            user_id = current_user.id
-            new_comment = Comment(content=content, user_id=user_id, post_id=id)
+            new_comment = Comment(content=content, author=username, post_id=id)
             db.session.add(new_comment)
             db.session.commit()
             return redirect('/home')
 
     all_posts = Post.query.order_by(desc(Post.date)).all()
-    username = User.query.get(current_user.id).username
     return render_template("comment.html", posts=all_posts, current_user=username, comment_post=id, form=form)
+
 
 @app.route('/home')
 @login_required

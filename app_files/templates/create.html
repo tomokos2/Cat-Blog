@@ -13,8 +13,14 @@
         {{ wtf.form_field(form.title) }}
         {{ wtf.form_field(form.image) }}
         {{ wtf.form_field(form.content) }}
-        <button type="submit" class="btn btn-primary">Post</button>
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Post</button>
+
+            <a class="btn btn-danger ml-auto" href="/home">Cancel and Go Back</a>
+        </div>
+
     </form>
+
 </div>
 
 {% endblock %}

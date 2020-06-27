@@ -44,7 +44,7 @@ class Comment(db.Model):
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     # The author of the comment
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    author = db.Column(db.String(100), db.ForeignKey('user.username'), nullable=False)
     # The post under which the comment was written
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
 
@@ -73,5 +73,10 @@ class PostForm(FlaskForm):
 
 class CommentForm(FlaskForm):
     content = TextAreaField('Comment', validators=[InputRequired(), Length(min=1, max=400)])
+
+class EditForm(FlaskForm):
+    title = StringField('Title', validators=[InputRequired(), Length(min=1, max=40)])
+    content = TextAreaField('Content', validators=[InputRequired(), Length(min=1, max=2000)])
+
 
 
