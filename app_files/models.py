@@ -32,7 +32,7 @@ class User(UserMixin, db.Model):
 
     # Relationship to post model
     # lazy means sqlalchemy will load all of the data in one go
-    posts = db.relationship('Post', backref='post_author', lazy=True)
+    posts = db.relationship('Post', backref='post_author', lazy=True, order_by='Post.date.desc()')
 
     def __repr__(self):
         return f'<User: id={self.id}, name={self.username}>'
@@ -69,5 +69,9 @@ class PostForm(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=1, max=40)])
     image = FileField('Image', validators=[FileAllowed(['jpg', 'png'], 'Images only!')])
     content = TextAreaField('Content', validators=[InputRequired(), Length(min=1, max=2000)])
+
+
+class CommentForm(FlaskForm):
+    content = TextAreaField('Comment', validators=[InputRequired(), Length(min=1, max=400)])
 
 

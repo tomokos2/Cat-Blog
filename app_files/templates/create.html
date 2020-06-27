@@ -9,20 +9,10 @@
     <hr>
 
     <form action="/home/create" method="post" enctype="multipart/form-data">
-<!--        <div class="form-group">-->
-<!--            <label for="title">Title</label>-->
-<!--            <input type="text" class="form-control" name="title" id="title" placeholder="Title" required>-->
-<!--        </div>-->
-
-<!--        <div class="form-group">-->
-<!--            <label for="content">Write here...</label>-->
-<!--            <textarea class="form-control" name="content" id="content" rows="3" required></textarea>-->
-<!--        </div>-->
         {{ form.hidden_tag() }}
         {{ wtf.form_field(form.title) }}
         {{ wtf.form_field(form.image) }}
         {{ wtf.form_field(form.content) }}
-
         <button type="submit" class="btn btn-primary">Post</button>
     </form>
 </div>

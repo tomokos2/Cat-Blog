@@ -1,0 +1,14 @@
+{% extends 'home.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block comment_section %}
+
+<form action="/home/comment/{{comment_post}}" method="POST">
+    {{ form.hidden_tag() }}
+    {{ wtf.form_field(form.content) }}
+    <button type="submit" class="btn btn-primary">Post Comment</button>
+</form>
+<!--make so it goes back to either user home or home-->
+<a class="btn btn-danger" href="/home">Cancel</a>
+
+{% endblock %}
