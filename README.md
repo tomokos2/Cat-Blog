@@ -4,16 +4,19 @@ A blog site purely to discuss and share all things food-related, created with Fl
 ### Structure
 Go [here](https://flask.palletsprojects.com/en/1.1.x/tutorial/layout/) to understand the project layout.
 
-### Ideal capabilities:
+### Current functionalities:
 - Account creation/validation
   - Username
   - Email
-  - Profile picture
-- Graph Activity?  
 - Creating/deleting/editing posts
 - Comments
-- Timeline
 - Picture uploading capabilities
+
+### Ideal updates:
+- Profile picture
+- Graph Activity?  
+- Comment editing/deletion
+- Timeline
 - Recipe uploading?
 - Aesthetics
-- Home page
+- Picture resizing
