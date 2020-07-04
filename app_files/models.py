@@ -7,6 +7,7 @@ from wtforms.validators import InputRequired, Length, Email
 from flask_wtf.file import FileAllowed, FileField
 
 
+# Database model for Post
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -22,12 +23,11 @@ class Post(db.Model):
         return f'<Post: id={self.id}, title={self.title} author={self.author}>'
 
 
+# Database model for User that also implemenets flask-login
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-
-    # Todo: write encryption
     password = db.Column(db.String(60), nullable=False)
 
     # Relationship to post model
@@ -38,6 +38,7 @@ class User(UserMixin, db.Model):
         return f'<User: id={self.id}, name={self.username}>'
 
 
+# Database model for every comment
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
@@ -52,12 +53,14 @@ class Comment(db.Model):
         return f'<Comment: id={self.id}, content={self.content[0:20]}>'
 
 
+# Wtform for Logging in to the app
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired(), Length(min=4, max=20)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=4, max=20)])
     shouldRemember = BooleanField('Remember Me')
 
 
+# Wtform for Registering for the app
 class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(), Email(message='Invalid Email'), Length(min=4, max=50)])
     username = StringField('Username', validators=[InputRequired(), Length(min=4, max=20)])
@@ -65,15 +68,20 @@ class RegisterForm(FlaskForm):
     passwordRetype = PasswordField('Retype Your Password', validators=[InputRequired(), Length(min=4, max=20)])
 
 
+# Wtform for creating a new post
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=1, max=40)])
+    # An optional image
     image = FileField('Image', validators=[FileAllowed(['jpg', 'png'], 'Images only!')])
     content = TextAreaField('Content', validators=[InputRequired(), Length(min=1, max=2000)])
 
 
+# Wtform for making a comment on a post
 class CommentForm(FlaskForm):
     content = TextAreaField('Comment', validators=[InputRequired(), Length(min=1, max=400)])
 
+
+# Wtform for editing a post
 class EditForm(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=1, max=40)])
     content = TextAreaField('Content', validators=[InputRequired(), Length(min=1, max=2000)])
