@@ -2,7 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block comment_section %}
-
+<!-- Add a comment to an existing list of posts -->
 <form action="/home/comment/{{comment_post}}" method="POST">
     {{ form.hidden_tag() }}
     {{ wtf.form_field(form.content) }}
