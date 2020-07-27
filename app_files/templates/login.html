@@ -17,16 +17,12 @@
     <br>
     <a href="/register">Don't have an account? Register here.</a>
     <br>
-
-    <!-- Add alert if they had an error from previous action -->
     {% if error %}
     <div class="alert alert-danger" role="alert">
         {{ error }}
     </div>
     {% endif %}
-    <!-- End alert -->
 
-    <!-- means they just registered and have a new account -->
     {% if message %}
     <div class="alert alert-success" role="alert">
         {{ message }}
